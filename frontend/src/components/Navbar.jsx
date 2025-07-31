@@ -11,8 +11,8 @@ const Navbar = () => {
       <div className="flex items-center justify-start gap-4">
         {user ? (
           <>
-           <Link to="/" className="text-white">TaskList</Link>
-           <Link to="/" className="text-white">spin</Link>
+           <Link to="/" className="text-white ">TaskList</Link>
+           <Link to="/" className="text-white ">spin</Link>
             <span className="font-medium text-white">Hi, {user.name}</span>
             <button onClick={logout} className="bg-emerald-500 text-white px-3 py-1 rounded">Logout</button>
           </>
