@@ -2,8 +2,10 @@ import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+
 import img from '../assets/signup.jpg'; // Adjust the path as necessary
+import apiClient from '../api/apiClient';
+import toast from 'react-hot-toast';
 
 const Register = () => {
   const { login } = useContext(AuthContext);
@@ -14,11 +16,13 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/users/register', data, { withCredentials: true });
+      const res = await apiClient.post('/users/register', data, { withCredentials: true });
+      
       login(res.data.user);
+     toast.success('Registration successful!');
       navigate('/');
     } catch (error) {
-      alert(error.response?.data?.message || 'Registration failed');
+      toast.error(error.response?.data?.message || 'Registration failed');
     }
   };
 

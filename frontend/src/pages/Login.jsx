@@ -2,8 +2,10 @@ import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+
 import img from '../assets/login.jpeg'; // Adjust the path as necessary
+import apiClient from '../api/apiClient';
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -13,11 +15,12 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/users/login', data, { withCredentials: true });
+      const res = await apiClient.post('/users/login', data, { withCredentials: true });
       login(res.data.user);
+      toast.success('Login successfully!');
       navigate('/');
     } catch (error) {
-      alert(error.response?.data?.message || 'Login failed');
+      toast.error(error.response?.data?.message || 'Login failed');
     }
   };
 
@@ -69,7 +72,7 @@ const Login = () => {
               <input type="checkbox" className="mr-2" />
               Remember me
             </label>
-            <a href="#" className="text-green-500 text-sm hover:underline">Forgot password?</a>
+            <Link to="#" className="text-green-500 text-sm hover:underline">Forgot password?</Link>
           </div>
 
           {/* Login Button */}

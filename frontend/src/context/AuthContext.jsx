@@ -1,29 +1,31 @@
 import { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import apiClient from '../api/apiClient';
 
-axios.defaults.withCredentials = true; // Always send cookies with requests
+axios.defaults.withCredentials = true; // Send cookies by default
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch user session from backend
-  const fetchUser = async () => {
-    try {
-      const res = await axios.get('http://localhost:5000/api/users/me', { withCredentials: true });
-      setUser(res.data.user);
-    } catch {
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+
+   const fetchUser = async () => {
+  try {
+    const res = await apiClient.get('/users/me');
+   
+    setUser(res.data.user);
+  // eslint-disable-next-line no-unused-vars
+  } catch (err) {
+    setUser(null);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
-    fetchUser(); // Fetch on app start
+    fetchUser();
   }, []);
 
   const login = (userData) => {
@@ -31,8 +33,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await axios.post('http://localhost:5000/api/users/logout', {}, { withCredentials: true });
+    try {
+      await apiClient.post('/users/logout');
+    } catch { /* empty */ }
     setUser(null);
+    setLoading(false);
   };
 
   return (
